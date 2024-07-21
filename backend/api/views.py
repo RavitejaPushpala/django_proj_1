@@ -6,9 +6,8 @@ from products.serializers import ProductSerializer
 
 @api_view(["POST"])
 def api_home(request,*args,**kwargs):
-    instance = Product.objects.all().order_by("?").first()
-    data={}
-    if instance:
-        # data = model_to_dict(model_data,fields=["id","title","price","sale_price"])
-        data = ProductSerializer(instance).data
-    return Response(data)
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        print(serializer.data)
+        return Response(serializer.data)
+    return Response({"invalid":"not a valid data"})
