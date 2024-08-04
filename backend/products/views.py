@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, mixins, permissions, authentication
-from api.authentication import TokenAuthentication
-from .permissions import IsStaffEditorPermission
+from rest_framework import generics, mixins
+from api.mixins import StaffEditorPermissionMixin
 from .models import Product
 from .serializers import ProductSerializer
 from rest_framework.response import Response
@@ -10,7 +9,7 @@ from rest_framework.decorators import api_view
 
 
 
-class ProductDestroyApiView(generics.DestroyAPIView):
+class ProductDestroyApiView(StaffEditorPermissionMixin,generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -20,7 +19,7 @@ class ProductDestroyApiView(generics.DestroyAPIView):
 
 product_delete_view = ProductDestroyApiView.as_view()
 
-class ProductUpdateApiView(generics.UpdateAPIView):
+class ProductUpdateApiView(StaffEditorPermissionMixin,generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -31,11 +30,9 @@ class ProductUpdateApiView(generics.UpdateAPIView):
 
 product_update_view = ProductUpdateApiView.as_view()
 
-class ProductListCreateApiView(generics.ListCreateAPIView):
+class ProductListCreateApiView(StaffEditorPermissionMixin,generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [authentication.SessionAuthentication,TokenAuthentication]
-    permission_classes = [permissions.IsAdminUser,IsStaffEditorPermission]
 
     def perform_create(self, serializer):
         title = serializer.validated_data.get("title")
@@ -46,13 +43,13 @@ class ProductListCreateApiView(generics.ListCreateAPIView):
 
 product_list_create_view = ProductListCreateApiView.as_view()
 
-class ProductDetailApiView(generics.RetrieveAPIView):
+class ProductDetailApiView(StaffEditorPermissionMixin,generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 product_detail_view = ProductDetailApiView.as_view()
 
-class ProductListApiView(generics.ListAPIView):
+class ProductListApiView(StaffEditorPermissionMixin,generics.ListAPIView):
     # not needed because it is covered in the ProductListCreateApiView
     queryset = Product.objects.all()
     serializer_class = ProductSerializer

@@ -1,6 +1,6 @@
 import requests
 
-headers = {'Authorization': 'bearer e56a3c494e5a07ac902eb4662f50151966141dbf'}
+headers = {'Authorization': 'bearer 5d0ad2970d4d2d4b2c4ddd661550f4aa8d9b1398'}
 
 endpoint = "http://localhost:8000/api/products/"
 
